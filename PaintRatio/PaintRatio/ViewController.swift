@@ -10,9 +10,10 @@ import UIKit
 
 class ViewController: UIViewController {
     
+    @IBOutlet weak var ruleView: RuleView!
     @IBOutlet weak var thumbnailView: UIVisualEffectView!
     @IBOutlet weak var photoCollectionView: UICollectionView!
-    @IBOutlet var photosController: PhotosController! = PhotosController.share
+    weak var photosController: PhotosController! = PhotosController.share
     @IBOutlet weak var scrollView: UIScrollView!
     var canvas: CanvasView!
     override var prefersStatusBarHidden: Bool {
@@ -30,6 +31,26 @@ class ViewController: UIViewController {
                                           owner: nil,
                                           options: nil)?.first as! CanvasView
         scrollView.addSubview(canvas)
+        photoCollectionView.dataSource = photosController
+        
+        photosController.photoChanged(removed: {[weak self] (set) in
+            let indexs = set.map{IndexPath(item: $0, section: 0)}
+            self?.photoCollectionView.deleteItems(at: indexs)
+            
+            }, inserted: {[weak self] (set) in
+                let indexs = set.map{IndexPath(item: $0, section: 0)}
+                self?.photoCollectionView.insertItems(at: indexs)
+                
+            }, changed: {[weak self] (set) in
+                let indexs = set.map{IndexPath(item: $0, section: 0)}
+                self?.photoCollectionView.reloadItems(at: indexs)
+                
+            }, moved: {[weak self] (i, j) in
+                self?.photoCollectionView.moveItem(at: IndexPath(item: i, section: 0), to: IndexPath(item: j, section: 0))
+            }) { [weak self] in
+                self?.photoCollectionView.reloadData()
+        }
+        
         photosController.startRequestPhotos {[weak self] (scucess) in
             if scucess {
                 DispatchQueue.main.async {
@@ -58,12 +79,29 @@ class ViewController: UIViewController {
             }
         }
     }
+
+}
+
+// MARK: - IBAction
+extension ViewController {
+    
+    @IBAction func changeRule(_ sender: AnyObject) {
+        ruleView.changeRule()
+    }
+    
+    @IBAction func camera(_ sender: AnyObject) {
+        let picker = UIImagePickerController()
+        picker.sourceType = .camera
+        picker.delegate = self
+        self.present(picker, animated: true, completion: nil)
+    }
+    
     
     @IBAction func tap(_ sender: UITapGestureRecognizer) {
         if navigationController!.isNavigationBarHidden {
             navigationController?.setNavigationBarHidden(false, animated: true)
             thumbnailView.transform = CGAffineTransform.init(translationX: 0, y: 60)
-            UIView.animate(withDuration: 0.2, animations: { 
+            UIView.animate(withDuration: 0.2, animations: {
                 self.thumbnailView.transform = CGAffineTransform.identity
             })
         } else {
@@ -102,5 +140,30 @@ extension ViewController: UIScrollViewDelegate {
 extension ViewController: UICollectionViewDelegate {
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         fetchImageAt(i: indexPath.item)
+    }
+}
+
+extension ViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+        if let img = info[UIImagePickerControllerOriginalImage] as? UIImage {
+            saveImage(img, compeletion: {
+                DispatchQueue.main.async {[weak self] in
+                    self?.dismiss(animated: true, completion: nil)
+                }
+            })
+            
+        }
+    }
+}
+
+// MARK: - filePrivate Methods
+extension ViewController {
+    func saveImage(_ img: UIImage, compeletion: @escaping () -> ()) {
+        photosController.saveImageToLibrary(image: img) { (success) in
+            if success {
+                print("Save image success!")
+            }
+            compeletion()
+        }
     }
 }

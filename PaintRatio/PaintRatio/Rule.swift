@@ -13,7 +13,11 @@ struct Rule {
     let lineWidth: Int
     let spliter: (x: Int, y: Int)
     
-    static var defaultRule: Rule {
+    static var lightRule: Rule {
+        return Rule(lineWidth: 1, spliter: (2, 2))
+    }
+    
+    static var boldRule: Rule {
         return Rule(lineWidth: 2, spliter: (2, 2))
     }
 }
@@ -44,7 +48,7 @@ extension Rule {
         bezierPath.move(to: CGPoint(x: start.x, y: start.y))
         bezierPath.addLine(to: CGPoint(x: end.x, y: end.y))
         color.setStroke()
-        bezierPath.lineWidth = 1
+        bezierPath.lineWidth = CGFloat(lineWidth)
         bezierPath.stroke()
     }
 }

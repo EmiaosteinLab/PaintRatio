@@ -21,6 +21,15 @@ class PhotosController: NSObject {
     
     fileprivate let imageCacheManager = PHCachingImageManager()
     fileprivate var accessStatus = AccessStatus.Failture
+    fileprivate var removeHandler: ((IndexSet) -> ())?
+    fileprivate var insertHandler: ((IndexSet) -> ())?
+    fileprivate var changeHandler: ((IndexSet) -> ())?
+    fileprivate var moveHandler: ((Int, Int) -> ())?
+    fileprivate var reloadHandler: (() -> ())?
+    
+    func registerPhotoChange() {
+        PHPhotoLibrary.shared().register(self)
+    }
     
     func startRequestPhotos(completion: @escaping (Bool) -> ()) {
         checkLibraryStatus {[weak self] (scuccess) in
@@ -48,6 +57,67 @@ class PhotosController: NSObject {
             })
         default:
             completion(nil)
+        }
+    }
+    
+    func photoChanged(removed:@escaping (IndexSet) -> (), inserted: @escaping (IndexSet) -> (), changed: @escaping (IndexSet) -> (), moved:@escaping (Int, Int) -> (), reloadData: @escaping () -> ()) {
+        removeHandler = removed
+        insertHandler = inserted
+        changeHandler = changed
+        moveHandler = moved
+        reloadHandler = reloadData
+    }
+    
+    func saveImageToLibrary(image: UIImage, finishedHandler:((Bool) -> ())?) {
+        
+        func save(image: UIImage, finishedHandler:((Bool) -> ())?) {
+            PHPhotoLibrary.shared().performChanges({
+                PHAssetChangeRequest.creationRequestForAsset(from: image)
+            }) {finishedHandler?($0.0)}
+        }
+        
+//        func openSetting() {
+//            // alert to open setting
+//            let cancelTitle = "Cancel"
+//            let cancelAction = UIAlertAction(title: cancelTitle, style: .cancel, handler: nil)
+//            
+//            let doneTitle = "OK"
+//            let doneAction = UIAlertAction(title: doneTitle, style: .default) { (action) in
+//                UIApplication.shared.openURL(NSURL(string: UIApplicationOpenSettingsURLString)! as URL)
+//            }
+//            
+//            let alertTitle = "Please Allow Access to Your Photos"
+//            let message = "This allow Curios to share photos from your library and save photos to your camera roll."
+//            let alert = UIAlertController(title: alertTitle, message: message, preferredStyle: .alert)
+//            alert.addAction(cancelAction)
+//            alert.addAction(doneAction)
+//            
+//            presentViewController(alert, animated: true, completion: nil)
+//        }
+        
+        func authorize() {
+            PHPhotoLibrary.requestAuthorization { (status) in
+                switch status {
+                case .authorized:
+                    save(image: image, finishedHandler: finishedHandler)
+                    
+                default:
+                    finishedHandler?(false)
+                }
+            }
+        }
+        
+        let status = PHPhotoLibrary.authorizationStatus()
+        
+        switch status {
+        case .authorized:
+            save(image: image, finishedHandler: finishedHandler)
+            
+        case .notDetermined:
+            authorize()
+            
+        default:()
+//            openSetting()
         }
     }
 }
@@ -117,6 +187,35 @@ extension PhotosController: UICollectionViewDataSource {
             fallthrough
         default:
             return cell
+        }
+    }
+}
+
+extension PhotosController: PHPhotoLibraryChangeObserver {
+    func photoLibraryDidChange(_ changeInstance: PHChange) {
+        switch accessStatus {
+        case .Enabled(let result):
+            guard let changedDetails = changeInstance.changeDetails(for: result) else {return}
+            accessStatus = .Enabled(changedDetails.fetchResultAfterChanges)
+            
+            if let ri = changedDetails.removedIndexes {
+                removeHandler?(ri)
+            }
+            
+            if let ii = changedDetails.insertedIndexes {
+                insertHandler?(ii)
+            }
+            
+            if let ci = changedDetails.changedIndexes {
+                changeHandler?(ci)
+            }
+            
+            if changedDetails.hasMoves == true, let moveHandler = moveHandler {
+                changedDetails.enumerateMoves(moveHandler)
+            }
+
+        default:
+            ()
         }
     }
 }

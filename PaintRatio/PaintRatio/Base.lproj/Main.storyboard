@@ -26,20 +26,20 @@
                                 </connections>
                             </scrollView>
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="vOC-lL-6FR" customClass="RuleView" customModule="PaintRatio" customModuleProvider="target">
-                                <frame key="frameInset"/>
+                                <frame key="frameInset" minX="-1" maxX="2"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                 <gestureRecognizers/>
                             </view>
                             <visualEffectView opaque="NO" contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="YAc-WQ-oPB">
-                                <frame key="frameInset" height="59" maxX="-1"/>
+                                <frame key="frameInset" minX="-1" height="60"/>
                                 <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                 <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" ambiguous="YES" id="yoj-tX-eAO">
                                     <frame key="frameInset"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                     <subviews>
                                         <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="yB9-4j-7cc">
-                                            <frame key="frameInset"/>
+                                            <frame key="frameInset" maxX="68"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                             <collectionViewFlowLayout key="collectionViewLayout" scrollDirection="horizontal" minimumLineSpacing="10" minimumInteritemSpacing="10" id="XOA-GD-8Cc">
@@ -50,7 +50,7 @@
                                             </collectionViewFlowLayout>
                                             <cells>
                                                 <collectionViewCell opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" reuseIdentifier="thumbnailCell" id="hpt-Rk-FAp">
-                                                    <rect key="frame" x="10" y="9.5" width="40" height="40"/>
+                                                    <rect key="frame" x="10" y="10" width="40" height="40"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                     <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center">
                                                         <rect key="frame" x="0.0" y="0.0" width="40" height="40"/>
@@ -66,10 +66,17 @@
                                                 </collectionViewCell>
                                             </cells>
                                             <connections>
-                                                <outlet property="dataSource" destination="Uma-ae-LKO" id="nwn-3e-bMR"/>
                                                 <outlet property="delegate" destination="BYZ-38-t0r" id="ebA-zH-ocV"/>
                                             </connections>
                                         </collectionView>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3y2-KV-qt6">
+                                            <frame key="frameInset" width="60"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" heightSizable="YES"/>
+                                            <state key="normal" title="Button"/>
+                                            <connections>
+                                                <action selector="camera:" destination="BYZ-38-t0r" eventType="touchUpInside" id="yPz-5d-RUJ"/>
+                                            </connections>
+                                        </button>
                                     </subviews>
                                 </view>
                                 <blurEffect style="dark"/>
@@ -87,16 +94,21 @@
                     <toolbarItems>
                         <barButtonItem title="Item" id="rLZ-kd-zvw"/>
                     </toolbarItems>
-                    <navigationItem key="navigationItem" id="wAI-2C-Nty"/>
+                    <navigationItem key="navigationItem" id="wAI-2C-Nty">
+                        <barButtonItem key="rightBarButtonItem" systemItem="refresh" id="sZ4-Di-6dk">
+                            <connections>
+                                <action selector="changeRule:" destination="BYZ-38-t0r" id="l3n-9Y-zjw"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <outlet property="photoCollectionView" destination="yB9-4j-7cc" id="cbF-hC-yVU"/>
-                        <outlet property="photosController" destination="Uma-ae-LKO" id="n5t-VJ-vAf"/>
+                        <outlet property="ruleView" destination="vOC-lL-6FR" id="Wda-yh-8dz"/>
                         <outlet property="scrollView" destination="w29-dY-Boa" id="6Gh-u3-edE"/>
                         <outlet property="thumbnailView" destination="YAc-WQ-oPB" id="kOm-F5-e2O"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="dkx-z0-nzr" sceneMemberID="firstResponder"/>
-                <customObject id="Uma-ae-LKO" customClass="PhotosController" customModule="PaintRatio" customModuleProvider="target"/>
                 <tapGestureRecognizer id="w9n-Sb-PR6">
                     <connections>
                         <action selector="tap:" destination="BYZ-38-t0r" id="Spp-Qd-6s8"/>
@@ -104,6 +116,58 @@
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="1132" y="137.18140929535232"/>
+        </scene>
+        <!--Camera View Controller-->
+        <scene sceneID="Odk-0y-R9g">
+            <objects>
+                <viewController id="RZ2-tG-BVX" customClass="CameraViewController" customModule="PaintRatio" customModuleProvider="target" sceneMemberID="viewController">
+                    <layoutGuides>
+                        <viewControllerLayoutGuide type="top" id="TXo-uV-N4T"/>
+                        <viewControllerLayoutGuide type="bottom" id="qCv-6t-adO"/>
+                    </layoutGuides>
+                    <view key="view" contentMode="scaleToFill" id="gWW-IB-IP7">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="1ZW-yF-z9I">
+                                <frame key="frameInset"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                            </view>
+                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="ozR-aW-540" customClass="RuleView" customModule="PaintRatio" customModuleProvider="target">
+                                <frame key="frameInset"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
+                            </view>
+                            <visualEffectView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="0Oe-1S-24d">
+                                <view key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" id="WwI-YD-ViW">
+                                    <frame key="frameInset"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="AyK-uF-sHZ">
+                                            <frame key="frameInset" minX="49.85%" minY="50.00%" width="46" height="30"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                            <state key="normal" title="Button"/>
+                                        </button>
+                                    </subviews>
+                                </view>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="2uv-cE-UNr"/>
+                                </constraints>
+                                <blurEffect style="light"/>
+                            </visualEffectView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="qCv-6t-adO" firstAttribute="top" secondItem="0Oe-1S-24d" secondAttribute="bottom" id="4Cf-7S-pyP"/>
+                            <constraint firstAttribute="trailing" secondItem="0Oe-1S-24d" secondAttribute="trailing" id="WKt-J7-akA"/>
+                            <constraint firstItem="0Oe-1S-24d" firstAttribute="leading" secondItem="gWW-IB-IP7" secondAttribute="leading" id="fTE-qe-LIr"/>
+                        </constraints>
+                    </view>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="frJ-FO-HaI" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2008.8" y="137.18140929535232"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="dTV-R8-Ztp">

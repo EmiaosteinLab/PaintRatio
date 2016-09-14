@@ -9,7 +9,7 @@
 import UIKit
 @IBDesignable
 class RuleView: UIView {
-    private var rule = Rule.defaultRule
+    private var rule = Rule.lightRule
     
     override func prepareForInterfaceBuilder() {
         setNeedsDisplay()
@@ -17,6 +17,11 @@ class RuleView: UIView {
     
     override func layoutSubviews() {
         super.layoutSubviews()
+        setNeedsDisplay()
+    }
+    
+    func changeRule() {
+        rule = rule.lineWidth == 1 ? Rule.boldRule : Rule.lightRule
         setNeedsDisplay()
     }
     

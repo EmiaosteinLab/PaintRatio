@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		2C0F16C51D895AD700AACCA7 /* CameraViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C0F16C41D895AD700AACCA7 /* CameraViewController.swift */; };
 		2C33D1431D88E22300120975 /* CanvasView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C33D1421D88E22300120975 /* CanvasView.swift */; };
 		2C64DC881D877E70001D9709 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C64DC871D877E70001D9709 /* AppDelegate.swift */; };
 		2C64DC8A1D877E70001D9709 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2C64DC891D877E70001D9709 /* ViewController.swift */; };
@@ -42,6 +43,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		2C0F16C41D895AD700AACCA7 /* CameraViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CameraViewController.swift; sourceTree = "<group>"; };
 		2C33D1421D88E22300120975 /* CanvasView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CanvasView.swift; sourceTree = "<group>"; };
 		2C64DC841D877E70001D9709 /* PaintRatio.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = PaintRatio.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2C64DC871D877E70001D9709 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -123,6 +125,7 @@
 				2C65472E1D88034000BA0B97 /* CanvasView.xib */,
 				2C64DC871D877E70001D9709 /* AppDelegate.swift */,
 				2C64DC891D877E70001D9709 /* ViewController.swift */,
+				2C0F16C41D895AD700AACCA7 /* CameraViewController.swift */,
 				2C64DC8B1D877E70001D9709 /* Main.storyboard */,
 				2C64DC8E1D877E70001D9709 /* Assets.xcassets */,
 				2C64DC901D877E70001D9709 /* LaunchScreen.storyboard */,
@@ -296,6 +299,7 @@
 				2C64DC881D877E70001D9709 /* AppDelegate.swift in Sources */,
 				2C6547311D88042F00BA0B97 /* PhotosController.swift in Sources */,
 				2C6547291D87F62600BA0B97 /* SkinConfig.swift in Sources */,
+				2C0F16C51D895AD700AACCA7 /* CameraViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
